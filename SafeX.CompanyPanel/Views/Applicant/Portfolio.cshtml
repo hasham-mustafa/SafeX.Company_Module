@@ -1,0 +1,183 @@
+@model ApplicantPortfolioViewModel
+@{
+    ViewData["Title"] = $"{Model.FullName} — Portfolio";
+    ViewData["ActivePage"] = "Applicants";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0"><i class="bi bi-person-badge"></i> Intern Portfolio</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index">Applicants</a></li>
+                <li class="breadcrumb-item active">@Model.FullName</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+            <i class="bi bi-person"></i> Profile
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body p-4">
+                <div class="portfolio-avatar mx-auto mb-3">
+                    @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                    {
+                        <img src="@Model.ProfilePicture" alt="@Model.FullName" />
+                    }
+                    else
+                    {
+                        <span>@Model.FirstName[0]@Model.LastName[0]</span>
+                    }
+                </div>
+                <h4 class="fw-bold">@Model.FullName</h4>
+                <p class="text-muted small">@Model.Email</p>
+                @if (!string.IsNullOrEmpty(Model.Phone))
+                {
+                    <p class="text-muted small mb-1"><i class="bi bi-telephone"></i> @Model.Phone</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.University))
+                {
+                    <p class="text-muted small mb-1">
+                        <i class="bi bi-mortarboard"></i> @Model.University
+                    </p>
+                }
+                <p class="text-muted small mb-1">
+                    <i class="bi bi-briefcase"></i> Applied for: <strong>@Model.JobTitle</strong>
+                </p>
+                <p class="text-muted small">
+                    <i class="bi bi-building"></i> @Model.CompanyName
+                </p>
+                <span class="badge bg-info fs-6 px-3 py-2 rounded-pill">@Model.StatusDisplay</span>
+
+                <hr />
+
+                @if (Model.BidAmount.HasValue)
+                {
+                    <div class="mb-2">
+                        <small class="text-muted d-block">Bid Amount</small>
+                        <strong class="text-success fs-4">@Model.BidAmount.Value:N0</strong>
+                    </div>
+                }
+
+                <div class="mb-2">
+                    <small class="text-muted d-block">Applied</small>
+                    <strong>@Model.AppliedAt.ToString("MMM dd, yyyy")</strong>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-center gap-2">
+                    @if (!string.IsNullOrEmpty(Model.PortfolioUrl))
+                    {
+                        <a href="@Model.PortfolioUrl" target="_blank" class="btn btn-outline-primary btn-sm" title="Portfolio">
+                            <i class="bi bi-link-45deg"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+                    {
+                        <a href="@Model.LinkedInUrl" target="_blank" class="btn btn-outline-info btn-sm" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ResumePath))
+                    {
+                        <a href="@Model.ResumePath" target="_blank" class="btn btn-outline-secondary btn-sm" title="Resume">
+                            <i class="bi bi-file-text"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        @if (!string.IsNullOrEmpty(Model.Skills))
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-tools"></i> Skills & Technologies</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var skill in Model.SkillsList)
+                        {
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-4 py-2 rounded-pill fs-6 fw-normal">@skill</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Proposal))
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-chat-quote"></i> Proposal</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="p-3 bg-light rounded-3">
+                        <p class="mb-0" style="white-space: pre-line;">@Model.Proposal</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.CoverLetter))
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-envelope"></i> Cover Letter</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="p-3 bg-light rounded-3">
+                        <p class="mb-0" style="white-space: pre-line;">@Model.CoverLetter</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Application Summary</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <small class="text-muted d-block">Applied On</small>
+                            <strong>@Model.AppliedAt.ToString("MMM dd, yyyy")</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <small class="text-muted d-block">Current Status</small>
+                            <strong>@Model.StatusDisplay</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <small class="text-muted d-block">Position</small>
+                            <strong>@Model.JobTitle</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <small class="text-muted d-block">Company</small>
+                            <strong>@Model.CompanyName</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

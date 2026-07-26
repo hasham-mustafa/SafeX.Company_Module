@@ -1,0 +1,147 @@
+@model CompanyProfileViewModel
+@{
+    ViewData["Title"] = "Company Profile";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0"><i class="bi bi-gear"></i> Company Profile</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Profile</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="avatar-lg mx-auto mb-3">
+                        @if (!string.IsNullOrEmpty(Model.LogoPath))
+                        {
+                            <img src="@Model.LogoPath" alt="Company Logo" class="rounded-circle img-thumbnail"
+                                 style="width: 120px; height: 120px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto"
+                                 style="width: 120px; height: 120px;">
+                                <i class="bi bi-building display-5 text-primary"></i>
+                            </div>
+                        }
+                    </div>
+                    <h5 class="fw-bold">@Model.CompanyName</h5>
+                    <p class="text-muted small">@Model.Email</p>
+                    @if (Model.IsVerified)
+                    {
+                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                            <i class="bi bi-patch-check-fill"></i> Verified
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
+                            <i class="bi bi-exclamation-circle"></i> Not Verified
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square"></i> Edit Profile</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                                <input asp-for="CompanyName" class="form-control" />
+                                <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label fw-semibold"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Phone" class="form-label fw-semibold"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Industry" class="form-label fw-semibold"></label>
+                                <select asp-for="Industry" class="form-select">
+                                    <option value="">-- Select Industry --</option>
+                                    <option value="Software Development">Software Development</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Finance & Banking">Finance & Banking</option>
+                                    <option value="Healthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="E-commerce">E-commerce</option>
+                                    <option value="Marketing & Advertising">Marketing & Advertising</option>
+                                    <option value="Consulting">Consulting</option>
+                                    <option value="Manufacturing">Manufacturing</option>
+                                    <option value="Real Estate">Real Estate</option>
+                                    <option value="Telecommunications">Telecommunications</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="Industry" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Website" class="form-label fw-semibold"></label>
+                                <input asp-for="Website" class="form-control" />
+                                <span asp-validation-for="Website" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold"></label>
+                                <input asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-semibold"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Logo" class="form-label fw-semibold"></label>
+                            <input asp-for="Logo" class="form-control" type="file" accept=".jpg,.jpeg,.png,.gif,.webp" />
+                            <div class="form-text">Leave empty to keep existing logo.</div>
+                            <span asp-validation-for="Logo" class="text-danger small"></span>
+                        </div>
+
+                        <div class="text-end">
+                            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary me-2">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

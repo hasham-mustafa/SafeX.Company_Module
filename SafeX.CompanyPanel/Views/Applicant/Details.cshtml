@@ -1,0 +1,187 @@
+@model SafeX.CompanyPanel.Models.Applicant
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+    ViewData["ActivePage"] = "Applicants";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0"><i class="bi bi-person"></i> Applicant Details</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-action="Index">Applicants</a></li>
+                        <li class="breadcrumb-item active">@Model.FirstName @Model.LastName</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Portfolio" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                    <i class="bi bi-person-badge"></i> Portfolio
+                </a>
+                <a asp-action="JobApplicants" asp-route-jobId="@Model.JobId" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="row mb-4">
+                    <div class="col-md-2 text-center mb-3 mb-md-0">
+                        <div class="applicant-avatar-lg mx-auto">
+                            @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                            {
+                                <img src="@Model.ProfilePicture" alt="@Model.FirstName" />
+                            }
+                            else
+                            {
+                                <span>@Model.FirstName[0]@Model.LastName[0]</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="fw-bold">@Model.FirstName @Model.LastName</h4>
+                        <p class="text-muted mb-1"><i class="bi bi-envelope"></i> <a href="mailto:@Model.Email">@Model.Email</a></p>
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            <p class="text-muted mb-1"><i class="bi bi-telephone"></i> @Model.Phone</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.University))
+                        {
+                            <p class="text-muted mb-0"><i class="bi bi-mortarboard"></i> @Model.University</p>
+                        }
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        @switch (Model.Status)
+                        {
+                            case SafeX.CompanyPanel.Models.ApplicantStatus.Pending:
+                                <span class="badge bg-secondary fs-6 px-3 py-2">Pending</span>
+                                break;
+                            case SafeX.CompanyPanel.Models.ApplicantStatus.Reviewed:
+                                <span class="badge bg-info text-dark fs-6 px-3 py-2">Reviewed</span>
+                                break;
+                            case SafeX.CompanyPanel.Models.ApplicantStatus.Shortlisted:
+                                <span class="badge bg-primary fs-6 px-3 py-2">Shortlisted</span>
+                                break;
+                            case SafeX.CompanyPanel.Models.ApplicantStatus.Rejected:
+                                <span class="badge bg-danger fs-6 px-3 py-2">Rejected</span>
+                                break;
+                            case SafeX.CompanyPanel.Models.ApplicantStatus.Hired:
+                                <span class="badge bg-success fs-6 px-3 py-2">Hired</span>
+                                break;
+                        }
+                        @if (Model.BidAmount.HasValue)
+                        {
+                            <div class="mt-2 fw-bold text-success fs-5">@Model.BidAmount.Value:N0</div>
+                            <small class="text-muted">Bid Amount</small>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Skills))
+                {
+                    <hr />
+                    <div class="mb-3">
+                        <h6 class="fw-semibold"><i class="bi bi-tools"></i> Skills</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            @foreach (var skill in Model.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                            {
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">@skill</span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">Applied For</small>
+                        <strong>@ViewBag.JobTitle</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Applied On</small>
+                        <strong>@Model.AppliedAt.ToString("MMM dd, yyyy h:mm tt")</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Reviewed On</small>
+                        <strong>@(Model.ReviewedAt?.ToString("MMM dd, yyyy h:mm tt") ?? "Not yet")</strong>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Proposal))
+                {
+                    <hr />
+                    <div class="mb-3">
+                        <h6 class="fw-semibold"><i class="bi bi-chat-quote"></i> Proposal</h6>
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="mb-0 text-muted" style="white-space: pre-line;">@Model.Proposal</p>
+                        </div>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.CoverLetter))
+                {
+                    <hr />
+                    <div class="mb-3">
+                        <h6 class="fw-semibold"><i class="bi bi-chat-quote"></i> Cover Letter</h6>
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="mb-0 text-muted" style="white-space: pre-line;">@Model.CoverLetter</p>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.PortfolioUrl) || !string.IsNullOrEmpty(Model.LinkedInUrl) || !string.IsNullOrEmpty(Model.ResumePath))
+                {
+                    <hr />
+                    <h6 class="fw-semibold mb-2"><i class="bi bi-link-45deg"></i> Links & Documents</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if (!string.IsNullOrEmpty(Model.PortfolioUrl))
+                        {
+                            <a href="@Model.PortfolioUrl" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-link"></i> Portfolio
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+                        {
+                            <a href="@Model.LinkedInUrl" target="_blank" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-linkedin"></i> LinkedIn
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ResumePath))
+                        {
+                            <a href="@Model.ResumePath" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-file-text"></i> Resume
+                            </a>
+                        }
+                    </div>
+                }
+
+                <hr />
+                <div class="d-flex gap-2 flex-wrap">
+                    @if (Model.Status == SafeX.CompanyPanel.Models.ApplicantStatus.Pending ||
+                    Model.Status == SafeX.CompanyPanel.Models.ApplicantStatus.Reviewed)
+                    {
+                        <form asp-action="Shortlist" asp-route-id="@Model.Id" method="post"
+                              onsubmit="return confirmAction('Shortlist @Model.FirstName @Model.LastName?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Shortlist</button>
+                        </form>
+                        <form asp-action="Reject" asp-route-id="@Model.Id" method="post"
+                              onsubmit="return confirmAction('Reject @Model.FirstName @Model.LastName?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-x-lg"></i> Reject</button>
+                        </form>
+                    }
+                    @if (Model.Status == SafeX.CompanyPanel.Models.ApplicantStatus.Shortlisted)
+                    {
+                        <a asp-action="OfferJob" asp-route-applicantId="@Model.Id" asp-route-jobId="@Model.JobId"
+                           class="btn btn-success"><i class="bi bi-handshake"></i> Offer Job</a>
+                    }
+                    <a asp-controller="Chat" asp-action="Start" asp-route-internId="@Model.Id"
+                       class="btn btn-outline-secondary"><i class="bi bi-chat-dots"></i> Start Chat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

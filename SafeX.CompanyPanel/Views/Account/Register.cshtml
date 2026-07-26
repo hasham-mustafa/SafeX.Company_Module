@@ -1,0 +1,169 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Company Registration";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="display-4 text-primary mb-2">
+                            <i class="bi bi-building-add"></i>
+                        </div>
+                        <h2 class="fw-bold">Create Your Company Account</h2>
+                        <p class="text-muted">Join SafeX and start hiring interns and freelancers</p>
+                    </div>
+
+                    <form asp-action="Register" method="post" enctype="multipart/form-data" id="registerForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-building text-primary"></i></span>
+                                    <input asp-for="CompanyName" class="form-control" placeholder="Enter company name" />
+                                </div>
+                                <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-envelope text-primary"></i></span>
+                                    <input asp-for="Email" class="form-control" placeholder="company@example.com" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-lock text-primary"></i></span>
+                                    <input asp-for="Password" class="form-control" placeholder="Min 8 characters" />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-lock-fill text-primary"></i></span>
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password" />
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Phone" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-telephone text-primary"></i></span>
+                                    <input asp-for="Phone" class="form-control" placeholder="+92 300 0000000" />
+                                </div>
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Industry" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-tag text-primary"></i></span>
+                                    <select asp-for="Industry" class="form-select">
+                                        <option value="">-- Select Industry --</option>
+                                        <option value="Software Development">Software Development</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Finance & Banking">Finance & Banking</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="Education">Education</option>
+                                        <option value="E-commerce">E-commerce</option>
+                                        <option value="Marketing & Advertising">Marketing & Advertising</option>
+                                        <option value="Consulting">Consulting</option>
+                                        <option value="Manufacturing">Manufacturing</option>
+                                        <option value="Real Estate">Real Estate</option>
+                                        <option value="Telecommunications">Telecommunications</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="Industry" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Website" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-globe text-primary"></i></span>
+                                    <input asp-for="Website" class="form-control" placeholder="https://example.com" />
+                                </div>
+                                <span asp-validation-for="Website" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-geo-alt text-primary"></i></span>
+                                    <input asp-for="Address" class="form-control" placeholder="Office address" />
+                                </div>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-semibold"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"
+                                      placeholder="Tell us about your company, mission, and what you do..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Logo" class="form-label fw-semibold"></label>
+                            <input asp-for="Logo" class="form-control" type="file" accept=".jpg,.jpeg,.png,.gif,.webp"
+                                   onchange="previewLogo(this)" />
+                            <div class="form-text">Optional. Accepted: JPG, PNG, GIF, WebP. Max 5MB.</div>
+                            <span asp-validation-for="Logo" class="text-danger small"></span>
+                            <div id="logoPreview" class="mt-2 d-none">
+                                <img src="" alt="Logo preview" class="img-thumbnail" style="max-height: 120px;" />
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-0">
+                            Already have an account?
+                            <a asp-action="Login" class="text-decoration-none fw-semibold">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewLogo(input) {
+            var preview = document.getElementById('logoPreview');
+            var img = preview.querySelector('img');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                    preview.classList.remove('d-none');
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.classList.add('d-none');
+                img.src = '';
+            }
+        }
+    </script>
+}

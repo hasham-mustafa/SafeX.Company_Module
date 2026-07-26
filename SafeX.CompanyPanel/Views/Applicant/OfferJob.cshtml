@@ -1,0 +1,82 @@
+@model OfferJobViewModel
+@{
+    ViewData["Title"] = "Offer Job";
+    ViewData["ActivePage"] = "Applicants";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0"><i class="bi bi-handshake"></i> Offer Job</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-action="Index">Applicants</a></li>
+                        <li class="breadcrumb-item active">Offer Job</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-send text-success"></i> Send Offer to
+                    <span class="text-success">@ViewBag.ApplicantName</span>
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="OfferJob" method="post">
+                    <input type="hidden" name="applicantId" value="@ViewBag.ApplicantId" />
+                    <input type="hidden" name="jobId" value="@ViewBag.JobId" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="SalaryOffered" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-currency-exchange text-success"></i></span>
+                            <input asp-for="SalaryOffered" class="form-control" type="number" step="0.01" placeholder="Offered salary amount" />
+                        </div>
+                        <span asp-validation-for="SalaryOffered" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StartDate" class="form-label fw-semibold"></label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EndDate" class="form-label fw-semibold"></label>
+                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Remarks" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Remarks" class="form-control" rows="4"
+                                  placeholder="Additional terms, conditions, benefits, or notes about this offer..."></textarea>
+                        <span asp-validation-for="Remarks" class="text-danger small"></span>
+                        <div class="form-text">These remarks will be visible to the applicant.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-secondary flex-fill">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success flex-fill">
+                            <i class="bi bi-send"></i> Send Offer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

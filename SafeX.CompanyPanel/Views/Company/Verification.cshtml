@@ -1,0 +1,174 @@
+@model CompanyVerificationViewModel
+@{
+    ViewData["Title"] = "Company Verification";
+    var verifications = ViewBag.Verifications as IEnumerable<VerificationDocumentInfo> ?? Enumerable.Empty<VerificationDocumentInfo>();
+    var isVerified = ViewBag.IsVerified as bool? ?? false;
+    var companyLogo = ViewBag.CompanyLogo as string;
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0"><i class="bi bi-patch-check"></i> Verification</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Verification</li>
+                </ol>
+            </nav>
+        </div>
+        @if (isVerified)
+        {
+            <span class="badge bg-success fs-6 px-4 py-2 rounded-pill">
+                <i class="bi bi-patch-check-fill"></i> Verified
+            </span>
+        }
+    </div>
+
+    @if (isVerified)
+    {
+        <div class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="bi bi-patch-check-fill fs-4 me-2"></i>
+            <div>
+                <strong>Your company is verified!</strong> You have full access to all platform features.
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-upload"></i> Upload Documents</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Verification" method="post" enctype="multipart/form-data" id="verificationForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Logo" class="form-label fw-semibold">
+                                <i class="bi bi-image text-primary"></i> Company Logo
+                            </label>
+                            <input asp-for="Logo" class="form-control" type="file" accept=".jpg,.jpeg,.png,.gif,.webp" />
+                            <div class="form-text">Recommended: Square image, max 5MB.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BusinessLicense" class="form-label fw-semibold">
+                                <i class="bi bi-file-earmark-text text-primary"></i> Business License
+                            </label>
+                            <input asp-for="BusinessLicense" class="form-control" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                            <div class="form-text">Accepted: PDF, DOC, DOCX, JPG, PNG. Max 5MB.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TaxCertificate" class="form-label fw-semibold">
+                                <i class="bi bi-file-earmark-check text-primary"></i> Tax Registration Certificate
+                            </label>
+                            <input asp-for="TaxCertificate" class="form-control" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                            <div class="form-text">Accepted: PDF, DOC, DOCX, JPG, PNG. Max 5MB.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="OwnerCnic" class="form-label fw-semibold">
+                                <i class="bi bi-person-badge text-primary"></i> Owner CNIC
+                            </label>
+                            <input asp-for="OwnerCnic" class="form-control" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                            <div class="form-text">Front & back copy. Accepted: PDF, JPG, PNG. Max 5MB.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="AdditionalDocument" class="form-label fw-semibold">
+                                <i class="bi bi-files text-primary"></i> Additional Supporting Document
+                            </label>
+                            <input asp-for="AdditionalDocument" class="form-control" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                            <div class="form-text">Any additional document that supports your verification.</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-send"></i> Submit for Verification
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Verification History</h5>
+                    <span class="badge bg-primary rounded-pill">@verifications.Count() document(s)</span>
+                </div>
+                <div class="card-body p-0">
+                    @if (!verifications.Any())
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox display-3 text-muted"></i>
+                            <h5 class="mt-3 text-muted">No Documents Uploaded</h5>
+                            <p class="text-muted">Upload verification documents to get your company verified.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Document Type</th>
+                                        <th>File</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Reviewed</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var doc in verifications)
+                                    {
+                                        <tr>
+                                            <td class="fw-semibold">@doc.DocumentType</td>
+                                            <td>
+                                                <a href="@doc.DocumentPath" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i> View
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @switch (doc.Status)
+                                                {
+                                                    case "Pending":
+                                                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
+                                                            <i class="bi bi-hourglass"></i> Pending
+                                                        </span>
+                                                        break;
+                                                    case "Approved":
+                                                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                                            <i class="bi bi-check-circle"></i> Approved
+                                                        </span>
+                                                        break;
+                                                    case "Rejected":
+                                                        <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">
+                                                            <i class="bi bi-x-circle"></i> Rejected
+                                                        </span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>@doc.SubmittedAt.ToString("MMM dd, yyyy")</td>
+                                            <td>@(doc.ReviewedAt?.ToString("MMM dd, yyyy") ?? "—")</td>
+                                            <td>@(doc.Remarks ?? "—")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

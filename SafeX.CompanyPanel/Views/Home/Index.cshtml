@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center py-5">
+    <div class="display-1 text-primary mb-3">
+        <i class="bi bi-shield-check"></i>
+    </div>
+    <h1 class="display-4 fw-bold">Welcome to SafeX</h1>
+    <p class="lead text-muted">Internship & Freelancing Platform — Company Panel</p>
+    <hr class="my-4 w-25 mx-auto">
+    <p class="text-muted">Manage jobs, review applicants, and hire talent.</p>
+    <div class="mt-4">
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">
+            <i class="bi bi-person-plus"></i> Get Started
+        </a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </a>
+    </div>
+</div>

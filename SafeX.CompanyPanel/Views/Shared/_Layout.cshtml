@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — SafeX Company Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="d-flex" id="wrapper">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <a asp-controller="Dashboard" asp-action="Index" class="sidebar-brand">
+                        <i class="bi bi-shield-check"></i>
+                        <span>SafeX</span>
+                    </a>
+                </div>
+                <div class="sidebar-body">
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-item">
+                            <a asp-controller="Dashboard" asp-action="Index"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Dashboard" ? "active" : "")">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Job" asp-action="Index"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Jobs" ? "active" : "")">
+                                <i class="bi bi-briefcase"></i>
+                                <span>My Jobs</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Job" asp-action="Create"
+                               class="sidebar-link">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Post Job</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Applicant" asp-action="Index"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Applicants" ? "active" : "")">
+                                <i class="bi bi-people"></i>
+                                <span>Applicants</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Dashboard" asp-action="Hires"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Hires" ? "active" : "")">
+                                <i class="bi bi-handshake"></i>
+                                <span>Hires</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-divider"></li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Company" asp-action="Verification"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Verification" ? "active" : "")">
+                                <i class="bi bi-patch-check"></i>
+                                <span>Verification</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a asp-controller="Account" asp-action="Profile"
+                               class="sidebar-link @(ViewData["ActivePage"]?.ToString() == "Profile" ? "active" : "")">
+                                <i class="bi bi-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-footer">
+                    <div class="sidebar-user">
+                        <div class="sidebar-user-avatar">
+                            @{
+                                var logo = User.FindFirst("CompanyLogo")?.Value;
+                                var name = User.FindFirst("CompanyName")?.Value ?? "C";
+                            }
+                            @if (!string.IsNullOrEmpty(logo))
+                            {
+                                <img src="@logo" alt="Logo" />
+                            }
+                            else
+                            {
+                                <span>@name[0]</span>
+                            }
+                        </div>
+                        <div class="sidebar-user-info">
+                            <div class="sidebar-user-name">@name</div>
+                            <div class="sidebar-user-role">Company</div>
+                        </div>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link p-0 text-white-50 sidebar-logout"
+                                    title="Logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-content" class="page-content">
+                <nav class="topbar navbar navbar-expand navbar-light bg-white shadow-sm">
+                    <div class="container-fluid">
+                        <button class="btn btn-sm btn-outline-secondary d-xl-none" id="sidebarToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <span class="navbar-text ms-2 d-none d-md-inline">
+                            <i class="bi bi-building me-1"></i> @User.FindFirst("CompanyName")?.Value
+                        </span>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                                   role="button" data-bs-toggle="dropdown">
+                                    <div class="topbar-avatar me-2">
+                                        @if (!string.IsNullOrEmpty(logo))
+                                        {
+                                            <img src="@logo" alt="Logo" />
+                                        }
+                                        else
+                                        {
+                                            <span>@name[0]</span>
+                                        }
+                                    </div>
+                                    <span class="d-none d-md-inline">@name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                                            <i class="bi bi-gear"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Company" asp-action="Verification">
+                                            <i class="bi bi-patch-check"></i> Verification
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-box-arrow-right"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main class="main-content">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+                <div class="container">
+                    <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-shield-check"></i> SafeX
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                    <i class="bi bi-person-plus"></i> Register
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container mt-4">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+    }
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" data-message="@TempData[Constants.TempDataSuccess]">
+            <div class="d-flex">
+                <div class="toast-body"><i class="bi bi-check-circle me-1"></i> <span id="successMsg"></span></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" data-message="@TempData[Constants.TempDataError]">
+            <div class="d-flex">
+                <div class="toast-body"><i class="bi bi-exclamation-triangle me-1"></i> <span id="errorMsg"></span></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
