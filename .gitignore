@@ -1,1 +1,40 @@
+# Build results
+bin/
+obj/
+out/
 
+# Visual Studio / Rider files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test results
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# ASP.NET Core / EF Core
+appsettings.Development.json
+appsettings.*.local.json
+*.db
+*.db-shm
+*.db-wal
+
+# Uploaded user content (keep the folder structure, ignore actual uploads)
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
