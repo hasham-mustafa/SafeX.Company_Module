@@ -203,8 +203,7 @@ else
         </div>
     </div>
 
-    <partial name="_Pagination" model='new PagedResult<SafeX.CompanyPanel.Models.Applicant> {
-        Items = Model.Applicants,
+    <partial name="_Pagination" model='new PaginationViewModel {
         TotalCount = Model.TotalCount,
         PageNumber = Model.PageNumber,
         PageSize = Model.PageSize
