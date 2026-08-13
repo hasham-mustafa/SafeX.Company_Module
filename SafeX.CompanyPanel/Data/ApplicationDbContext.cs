@@ -16,6 +16,7 @@ namespace SafeX.CompanyPanel.Data
         public DbSet<Job> Jobs => Set<Job>();
         public DbSet<Applicant> Applicants => Set<Applicant>();
         public DbSet<Hire> Hires => Set<Hire>();
+        public DbSet<Admin> Admins => Set<Admin>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,7 @@ namespace SafeX.CompanyPanel.Data
             modelBuilder.ApplyConfiguration(new JobConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicantConfiguration());
             modelBuilder.ApplyConfiguration(new HireConfiguration());
+            modelBuilder.ApplyConfiguration(new AdminConfiguration());
         }
     }
 }
